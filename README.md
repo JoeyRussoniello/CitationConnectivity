@@ -96,7 +96,8 @@ You can modify the visualization parameters (e.g., plot dimensions, circle sizes
 - Component Progress: A line graph of the aggregate % of data captured in each of the largest components
 #### Example Visualizations
 See below visualizations of citation networks by research genre, displaying how a papers genre may impact its connectivity within its field.
-
+![image info](./plots/Rule_Learning_connectivity.png)
+![image_info](./plots/Genetic_Algorithms_connectivity.png)
 ## Contribution
 Feel free to contribute to CitationConnectivity! Here’s how:
 
