@@ -36,7 +36,7 @@ pub fn show_aggregation(points:&Vec<f64>,filename:&str) -> Result<(), Box<dyn st
     Ok(())
 }
 
-fn get_graph_dimensions(
+pub fn get_graph_dimensions(
     component: &Vec<Option<usize>>, 
     num_components: usize, 
     drawing_bounds: (i32, i32, i32, i32),
@@ -127,7 +127,7 @@ fn get_graph_dimensions(
 }
 
 
-fn interpolate_color(start_color: (u8, u8, u8), end_color: (u8, u8, u8), t: f64) -> (u8, u8, u8) {
+pub fn interpolate_color(start_color: (u8, u8, u8), end_color: (u8, u8, u8), t: f64) -> (u8, u8, u8) {
     let (r_start, g_start, b_start) = start_color;
     let (r_end, g_end, b_end) = end_color;
 
@@ -138,7 +138,7 @@ fn interpolate_color(start_color: (u8, u8, u8), end_color: (u8, u8, u8), t: f64)
     (r, g, b)
 }
 
-fn get_color_from_gradient(index: usize, total: usize) -> RGBAColor {
+pub fn get_color_from_gradient(index: usize, total: usize) -> RGBAColor {
     // Define the start and end colors (dark blue to teal)
     let dark_blue = (0, 0, 139);  // RGB for dark blue
     let teal = (0, 128, 128);    // RGB for teal
@@ -149,76 +149,4 @@ fn get_color_from_gradient(index: usize, total: usize) -> RGBAColor {
     // Interpolate the color based on the normalized value
     let (r,g,b) = interpolate_color(dark_blue, teal, t);
     RGBAColor(r,g,b,1.0)
-}
-
-pub fn visualize_graph(
-    output_file: &str,
-    adjacency_list: &Vec<Vec<usize>>,
-    components: &Vec<Option<usize>>,
-    num_components: usize,
-    biggest_circle: f64
-) -> Result<(), Box<dyn std::error::Error>> {
-    let root = BitMapBackend::new(output_file, (1024, 1024)).into_drawing_area();
-    root.fill(&WHITE)?;
-
-    // Title for the graph
-    let root_area = root.titled("Component Connectivity", ("sans-serif", 40))?;
-
-    // Determine the bounds of the drawing area
-    let (x_min, x_max, y_min, y_max) = (-500, 500, -500, 500);
-
-    let mut cc = ChartBuilder::on(&root_area)
-        .margin(10)
-        .caption("Distribution of citation network by connected component", ("sans-serif", 20))
-        .build_cartesian_2d(x_min..x_max, y_min..y_max)?;
-
-    cc.configure_mesh().disable_mesh().draw()?;
-
-    // Step 1: Assign positions to nodes, clustered by components
-    let range_hash = get_graph_dimensions(components, num_components, (-500, 500, -500, 500), biggest_circle,50.0);
-    let mut rng = rand::thread_rng();
-    let mut positions: HashMap<usize, (i32, i32)> = HashMap::new();
-
-    for (i, component) in components.iter().enumerate() {
-        if let Some(comp) = component {
-            if let Some((center, radius)) = range_hash.get(comp) {
-                let (center_x, center_y) = *center;
-
-                // Generate random position within the circle using polar coordinates
-                let random_angle = rng.gen_range(0.0..(2.0 * std::f64::consts::PI)); // Random angle
-                let random_radius = rng.gen_range(0.0..=*radius); // Random radius (uniform distribution)
-
-                let offset_x = random_radius * random_angle.cos();
-                let offset_y = random_radius * random_angle.sin();
-
-                let node_x = (center_x + offset_x) as i32;
-                let node_y = (center_y + offset_y) as i32;
-                positions.insert(i, (node_x, node_y));
-            }
-        }
-    }
-
-    // Step 2: Draw edges between nodes
-    for (node, neighbors) in adjacency_list.iter().enumerate() {
-        if let Some(&(x1, y1)) = positions.get(&node) {
-            for &neighbor in neighbors {
-                if let Some(&(x2, y2)) = positions.get(&neighbor) {
-                    cc.draw_series(LineSeries::new(vec![(x1, y1), (x2, y2)], &full_palette::CYAN_100))?;
-                }
-            }
-        }
-    }
-
-    // Step 3: Draw nodes as circles with color based on their component
-    for (node, &(x, y)) in positions.iter() {
-        if let Some(component) = components[*node] {
-            // Get the color for the component
-            let color = get_color_from_gradient(component,num_components);
-
-            // Draw the node with the assigned color
-            cc.draw_series(std::iter::once(Circle::new((x, y), 5, color.filled())))?;
-        }
-    }
-
-    Ok(())
 }
