@@ -61,6 +61,7 @@ nodes.csv: Contains metadata for each node, including:
 - Label
 - Subject
 - Features (A one-hot encoded list indicating the presence of common words in the paper)
+
 edges.csv: Contains directed edges between nodes, specifying the citation network.
 Main Function
 The main function loads the graph, computes connected components, visualizes them, and generates subgraph statistics. Example usage:
