@@ -98,7 +98,15 @@ impl Graph{
         return Ok(Graph::create_directed(node_data.len(),&edges,node_data,reverse_hash));
     }
     
-    pub fn calculate_subgraphs(self) -> Vec<(String,Self)>{
+    pub fn calc_num_edges(&self) -> usize{
+        let mut n_edges = 0;
+        for outedge in self.outedges.iter(){
+            n_edges += outedge.len();
+        }
+        return n_edges;
+    }
+
+    pub fn calculate_subgraphs(&self) -> Vec<(String,Self)>{
         //RETHINK THIS APPROACH CITATION CIRCLES WON'T WORK HERE
 
         let mut subject_graph_info = HashMap::<String, (usize, AdjacencyList, HashMap<usize, NodeData>, HashMap<usize,usize>)>::new();
@@ -168,9 +176,14 @@ impl Graph{
         let drawing_area = (-500,500,-500,500);
         let (x_min, x_max, y_min, y_max) = drawing_area;
 
+        let vertices = self.n;
+        let edges = self.calc_num_edges();
+
         let mut cc = ChartBuilder::on(&root_area)
             .margin(10)
-            .caption("Distribution of citation network by connected component", TextStyle::from(("helvetica", 30).into_font()).color(&GREY_600))
+            .caption(
+                &format!("Distribution of citation network by connected component (V = {}, E = {})",vertices,edges), 
+                TextStyle::from(("helvetica", 30).into_font()).color(&GREY_600))
             .build_cartesian_2d(x_min..x_max, y_min..y_max)?;
     
         cc.configure_mesh().disable_mesh().draw()?;
