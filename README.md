@@ -97,7 +97,7 @@ You can modify the visualization parameters (e.g., plot dimensions, circle sizes
 #### Example Visualizations
 See below visualizations of citation networks by research genre, displaying how a papers genre may impact its connectivity within its field.
 <p align="center">
-  <img src="./plots/subgraphs/Rule_Learning_connectivity.png" width="49%" height="auto" alt="Example Graph for Rule Learning Connectivity">
+  <img src="./plots/subgraphs/Neural_Networks_connectivity.png" width="49%" height="auto" alt="Example Graph for Rule Learning Connectivity">
   <img src="./plots/subgraphs/Genetic_Algorithms_connectivity.png" width="49%" height="auto" alt="Example Graph for Genetic Algorithms Connectivity">
 </p>
 

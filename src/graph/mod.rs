@@ -3,6 +3,7 @@ pub mod visualization_support;
 
 use std::collections::{HashMap,VecDeque};
 use plotters::prelude::*;
+use full_palette::*;
 use rand::Rng;
 type Vertex = usize;
 type Edge = (Vertex, Vertex);
@@ -158,10 +159,10 @@ impl Graph{
         title:&str
     ) -> Result<(), Box<dyn std::error::Error>> {
         let root = BitMapBackend::new(output_file, output_size).into_drawing_area();
-        root.fill(&WHITE)?;
+        root.fill(&GREY_100)?;
     
         // Title for the graph
-        let root_area = root.titled(title, ("sans-serif", 40))?;
+        let root_area = root.titled(title, ("helvetica-bold", 45))?;
     
         // Determine the bounds of the drawing area
         let drawing_area = (-500,500,-500,500);
@@ -169,7 +170,7 @@ impl Graph{
 
         let mut cc = ChartBuilder::on(&root_area)
             .margin(10)
-            .caption("Distribution of citation network by connected component", ("sans-serif", 20))
+            .caption("Distribution of citation network by connected component", TextStyle::from(("helvetica", 30).into_font()).color(&GREY_600))
             .build_cartesian_2d(x_min..x_max, y_min..y_max)?;
     
         cc.configure_mesh().disable_mesh().draw()?;
@@ -206,7 +207,7 @@ impl Graph{
             if let Some(&(x1, y1)) = positions.get(&node) {
                 for &neighbor in neighbors {
                     if let Some(&(x2, y2)) = positions.get(&neighbor) {
-                        cc.draw_series(LineSeries::new(vec![(x1, y1), (x2, y2)], &full_palette::CYAN_100))?;
+                        cc.draw_series(LineSeries::new(vec![(x1, y1), (x2, y2)], &CYAN_100))?;
                     }
                 }
             }
