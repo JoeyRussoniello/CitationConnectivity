@@ -7,7 +7,7 @@
 5. [Output](#output)
 6. [Contribution](#contribution)
 ## Project Description
-CitationConnectivity is a Rust project that analyzes and visualizes the connectivity of a citation network. It processes citation data to identify connected components, visualize their structure, and generate subgraph statistics for different research subjects. The project is designed to work with CSV files containing nodes (representing research papers) and edges (representing citations between them).
+CitationConnectivity is a Rust project that analyzes and visualizes the connectivity of a citation network (example provided [from the CORA citations dataset](https://graphsandnetworks.com/the-cora-dataset/)). It processes citation data to identify connected components, visualize their structure, and generate subgraph statistics for different research subjects. The project is designed to work with CSV files containing nodes (representing research papers) and edges (representing citations between them).
 
 ## Features
 - **Connected Components Analysis**:Identify and analyze the connected components of a citation network.
