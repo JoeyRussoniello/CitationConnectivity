@@ -13,6 +13,7 @@ CitationConnectivity is a Rust project that analyzes and visualizes the connecti
 - **Connected Components Analysis**:Identify and analyze the connected components of a citation network.
 - **Component Visualization**: Generate visualizations for the overall network and its subgraphs to represent connectivity patterns.
 - **Subgraph Analysis**: Break down the network by research subjects and calculate connectivity statistics for each subgraph.
+  - *In subgraph creation, both the original nodes of the graph and the edges in the adjacency list are modified to only include vertices within the specified field*
 - **Customizable Visualizations**: Supports creating tailored plots for understanding connectivity and aggregation of components.
 ## Installation
 ### Dependencies
@@ -67,22 +68,34 @@ edges.csv: Contains directed edges between nodes, specifying the citation networ
 The main.rs function loads the graph, computes connected components, visualizes them, and generates subgraph statistics. Example usage:
 
 ```rust
-let graph = Graph::from_csvs("citation_network/edges.csv", "citation_network/nodes.csv").unwrap();
-let (components, num_components) = graph.connected_components();
-let component_sizes = count_components(&components, num_components);
-println!("Component Sizes: {:?}", component_sizes);
+//Create Graph From input CSV files
+let graph = Graph::from_csvs("citation_network\\edges.csv","citation_network\\nodes.csv").unwrap();
+
+//Divide graph by research subject
+let subgraphs = graph.calculate_subgraphs();
+
+//Plot each research subject's self-connectivity
+subgraphs.iter().for_each(|(subject, subgraph)| {
+    subgraph.visualize_connectivity(
+        &format!("plots\\subgraphs\\{}_connectivity.png",subject), //File path of output image
+        3.0,  //The Biggest Circle will only take up 1/3.0 of the graph's total space
+        (1024,1024), //Build graph on a 1024 x 1024 canvas
+        &format!("Connectivity of Research Papers in {}",subject)).unwrap(); //Graph Title
+});
 ```
 ## Output
 - Component Sizes: Prints the sizes of connected components.
 - Visualizations: Generates plots for the overall network and subgraphs in the `plots/` directory.
 
-### Customization
+#### Customization
 You can modify the visualization parameters (e.g., plot dimensions, circle sizes) in the visualization_support module.
 
-### Visualizations Supported
+#### Visualizations Supported
 - Connected Components: A visualization of all connected components in the network.
 - Subgraph Connectivity: Visualizations for individual research subjects to understand their connectivity.
 - Component Progress: A line graph of the aggregate % of data captured in each of the largest components
+#### Example Visualizations
+See below visualizations of citation networks by research genre, displaying how a papers genre may impact its connectivity within its field.
 
 ## Contribution
 Feel free to contribute to CitationConnectivity! Here’s how:
