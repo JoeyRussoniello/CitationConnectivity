@@ -63,8 +63,8 @@ nodes.csv: Contains metadata for each node, including:
 - Features (A one-hot encoded list indicating the presence of common words in the paper)
 
 edges.csv: Contains directed edges between nodes, specifying the citation network.
-Main Function
-The main function loads the graph, computes connected components, visualizes them, and generates subgraph statistics. Example usage:
+### Main Function
+The main.rs function loads the graph, computes connected components, visualizes them, and generates subgraph statistics. Example usage:
 
 ```rust
 let graph = Graph::from_csvs("citation_network/edges.csv", "citation_network/nodes.csv").unwrap();
