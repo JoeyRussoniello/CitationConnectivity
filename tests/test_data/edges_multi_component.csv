@@ -1,0 +1,5 @@
+,sourceNodeId,targetNodeId,relationshipType
+1,1,2,related_to
+2,2,1,related_to
+3,3,4,related_to
+4,4,3,related_to

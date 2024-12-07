@@ -5,7 +5,6 @@ use graph::component_functions::*;
 use graph::visualization_support::show_aggregation;
 fn main() {
     let graph = Graph::from_csvs("citation_network\\edges.csv","citation_network\\nodes.csv").unwrap();
-    
     let (component,num_components) = graph.connected_components();
     let component_sizes = count_components(&component, num_components);
     let component_scale = get_component_scale(&component, num_components,true);

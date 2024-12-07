@@ -156,7 +156,7 @@ impl Graph{
                 component_functions::mark_component_bfs(v, self, &mut component, component_count);
             }
         }
-        return (component, component_count + 1)
+        return (component, component_count)
     }
     //Create a png graph of the connected components of the graph
     pub fn visualize_connectivity(
@@ -191,14 +191,15 @@ impl Graph{
         //Run algorithm
         let (components,num_components) = self.connected_components();
         
-        // Step 1: Assign positions to nodes, clustered by components
+        // Step 1: Assign positions to nodes, clustered by components in circles
         let range_hash = visualization_support::get_graph_dimensions(&components, num_components, drawing_area, biggest_circle,50.0);
         let mut rng = rand::thread_rng();
         let mut positions: HashMap<usize, (i32, i32)> = HashMap::new();
     
         for (i, component) in components.iter().enumerate() {
             if let Some(comp) = component {
-                if let Some((center, radius)) = range_hash.get(comp) {
+                //Switch back from 1 based to 0 based index
+                if let Some((center, radius)) = range_hash.get(&(comp-1)) {
                     let (center_x, center_y) = *center;
     
                     // Generate random position within the circle using polar coordinates
@@ -238,5 +239,79 @@ impl Graph{
         }
     
         Ok(())
+    }
+}
+//Unit tests for module features
+#[cfg(test)]
+mod tests{
+    use crate::*;
+    #[test]
+    fn test_connected_components_single_component() {
+        let graph = Graph::from_csvs(
+            "tests\\test_data\\edges_single_component.csv",
+            "tests\\test_data\\nodes_single_component.csv"
+        ).unwrap();
+        let (_component, num_components) = graph.connected_components();
+        assert_eq!(num_components, 1);  // There should be 1 component
+    }
+
+    #[test]
+    fn test_connected_components_multiple_components(){
+        let graph = Graph::from_csvs(
+            "tests\\test_data\\edges_multi_component.csv",
+            "tests\\test_data\\nodes_multi_component.csv"
+        ).unwrap();
+        let (_component, num_components) = graph.connected_components();
+        assert_eq!(num_components,3); //There should be 3 components in graph
+    }
+
+    #[test]
+    fn test_count_components(){
+        let graph = Graph::from_csvs(
+            "tests\\test_data\\edges_single_component.csv", 
+            "tests\\test_data\\nodes_single_component.csv"
+        ).unwrap();
+        let (component,num_components) = graph.connected_components();
+        let component_sizes = count_components(&component, num_components);
+        assert_eq!(component_sizes.len(), 1);
+        assert_eq!(component_sizes[0],5);
+    }
+
+    #[test]
+    fn test_show_aggregation(){
+        let graph = Graph::from_csvs(
+            "tests\\test_data\\edges_multi_component.csv",
+            "tests\\test_data\\nodes_multi_component.csv"
+        ).unwrap();
+        
+        let (component, num_components) = graph.connected_components();
+        let component_scale = get_component_scale(&component, num_components, true);
+        let result = show_aggregation(&component_scale,
+            "tests\\test_output\\example_aggregation.png");
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_visualize_connectivity(){
+        let graph = Graph::from_csvs(
+            "tests\\test_data\\edges_multi_component.csv",
+            "tests\\test_data\\nodes_multi_component.csv"
+        ).unwrap();
+        let result = graph.visualize_connectivity(
+            "tests\\test_output\\example_connectivity.png", 
+            1.5, (1024,1024), 
+            "Multi-component test example");
+        assert!(result.is_ok())
+    }
+
+    #[test]
+    fn test_subgraphs(){
+        let graph = Graph::from_csvs(
+            "tests\\test_data\\edges_multi_component.csv",
+            "tests\\test_data\\nodes_multi_component.csv"
+        ).unwrap();
+
+        let subgraphs = graph.calculate_subgraphs();
+        assert_eq!(subgraphs.len(), 2);
     }
 }

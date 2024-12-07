@@ -19,7 +19,8 @@ pub fn mark_component_bfs(vertex:Vertex,graph:&Graph,component:&mut Vec<Option<C
 pub fn count_components(component:&Vec<Option<Component>>,num_components:usize) -> Vec<usize>{
     //Get the count of nodes in each component
     let mut component_counts = vec![0;num_components];
-    component.iter().for_each(|x| component_counts[x.unwrap()] += 1);
+    //Component counts from BFS are 1 indexed, but  unwrap() - 1 adjusts to a 0-index
+    component.iter().for_each(|x| component_counts[x.unwrap() -1] += 1);
     return component_counts;
 }
 pub fn get_component_scale(component:&Vec<Option<Component>>, num_components:usize,sort:bool) -> Vec<f64>{

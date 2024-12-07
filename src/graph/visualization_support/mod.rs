@@ -44,7 +44,7 @@ pub fn get_graph_dimensions(
     grid_size: f64, // Size of each cell in the grid
 ) -> HashMap<usize, ((f64, f64), f64)> {
     let (x_min, x_max, y_min, y_max) = drawing_bounds;
-    let component_counts = count_components(component, num_components);
+    let component_counts = count_components(component, num_components + 1);
     let total: usize = component_counts.iter().sum();
     let mut rng = rand::thread_rng();
     let mut component_sorted_tuples: Vec<(usize, usize)> = component_counts
@@ -53,7 +53,7 @@ pub fn get_graph_dimensions(
         .map(|(index, value)| (index, *value))
         .collect();
     component_sorted_tuples.sort_by(|a, b| b.1.cmp(&a.1));
-
+    println!("{:?}",component_sorted_tuples);
     let mut current_x = x_min as f64;
     let total_x_space = (x_max - x_min) as f64;
 
