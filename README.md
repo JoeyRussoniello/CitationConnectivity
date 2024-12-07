@@ -35,7 +35,6 @@ cargo build
 ```
 3. Run the project:
 ```bash
-bash
 cargo run
 ```
 
