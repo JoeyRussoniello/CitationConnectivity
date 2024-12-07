@@ -1,14 +1,16 @@
 # CitationConnectivity
 # Table of Contents
 1. [Project Description](#project-description)
-2. [Features](#features)
-3. [Installation](#installation)
-4. [Usage](#usage)
-5. [Output](#output)
-6. [Contribution](#contribution)
+2. [Full Writeup](#full-writeup)
+3. [Features](#features)
+4. [Installation](#installation)
+5. [Usage](#usage)
+6. [Output](#output)
+7. [Contribution](#contribution)
 ## Project Description
 CitationConnectivity is a Rust project that analyzes and visualizes the connectivity of a citation network (example provided [from the CORA citations dataset](https://graphsandnetworks.com/the-cora-dataset/)). It processes citation data to identify connected components, visualize their structure, and generate subgraph statistics for different research subjects. The project is designed to work with CSV files containing nodes (representing research papers) and edges (representing citations between them).
-
+#### Full Writeup
+The full writeup for this project can be found in `Writeup.pdf`
 ## Features
 - **Connected Components Analysis**:Identify and analyze the connected components of a citation network.
 - **Component Visualization**: Generate visualizations for the overall network and its subgraphs to represent connectivity patterns.
@@ -42,7 +44,7 @@ cargo run
 CitationConnectivity/
 ├── src/
 │   ├── main.rs                # Entry point for the application
-│   ├── graph.rs               # Main module for graph structure and operations
+│   ├── graph.rs               # Main module for graph structure and operations (includes test cases)
 │   ├── component_functions.rs # Utility functions for analyzing components
 │   ├── visualization_support.rs # Support functions for graph visualization
 ├── citation_network/
@@ -51,7 +53,11 @@ CitationConnectivity/
 ├── plots/
 │   ├── connected_components.png # Output visualization of connected components
 │   ├── subgraphs/             # Visualizations of subgraph connectivity
-└── Cargo.toml                 # Project dependencies
+├── tests/
+│   ├── test_data/             # Small csv files for unit tests of graph module functionality
+│   ├── test_output/           # .png results of test cases on small inputs
+├── Cargo.toml                 # Project dependencies
+└── Writeup.pdf                # Complete Project writeup
 ```
 ## Usage
 Input Files
@@ -97,7 +103,7 @@ You can modify the visualization parameters (e.g., plot dimensions, circle sizes
 #### Example Visualizations
 See below visualizations of citation networks by research genre, displaying how a papers genre may impact its connectivity within its field.
 <p align="center">
-  <img src="./plots/subgraphs/Neural_Networks_connectivity.png" width="49%" height="auto" alt="Example Graph for Rule Learning Connectivity">
+  <img src="./plots/subgraphs/Rule_Learning_connectivity.png" width="49%" height="auto" alt="Example Graph for Rule Learning Connectivity">
   <img src="./plots/subgraphs/Genetic_Algorithms_connectivity.png" width="49%" height="auto" alt="Example Graph for Genetic Algorithms Connectivity">
 </p>
 
